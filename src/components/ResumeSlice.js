@@ -6,7 +6,6 @@ export const ResumeSlice = createSlice({
     initialState:{},
     reducers: {
         submitForm: (state, action) => {
-            console.log(action.payload, 'action payload')
             state.resume = {...state.resume, resume: action.payload}
         }
     }

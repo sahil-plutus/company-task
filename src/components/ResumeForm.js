@@ -1,10 +1,11 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, Form, Button, Table, FormControl, FormGroup } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import { useFormik } from 'formik';
 import { submitForm } from './ResumeSlice';
 import './ResumeForm.css';
 import { useState } from 'react';
+import DisplayResume from './DisplayResume'
 
 
 const ResumeForm = () => {
@@ -25,7 +26,6 @@ const ResumeForm = () => {
         let newEducationValues = [...educationValues];
         newEducationValues[i][e.target.name] = e.target.value
         setEducationValues(newEducationValues);
-        console.log(educationValues);
     }
 
     const [experienceValues, setExperienceValues] = useState([{
@@ -45,27 +45,35 @@ const ResumeForm = () => {
         setExperienceValues(newExperienceValues)
     }
 
-    
-
     const formik = useFormik({
         initialValues: {
             first_name: "",
             last_name: "",
+            role: "",
+            website:"",
             address: "",
             phone_number:"",
             email_address: "",
-            education: educationValues,
-            experience: experienceValues,
+            summary: "",
+            education: {},
+            experience: {},
+            skills: "",
             achievement: "",
         },
         onSubmit: (values) => {
+            values.education = educationValues;
+            values.experience = experienceValues;
             dispatch(submitForm(values))
-        }
+        },
     })
     
+
     return (
         <>
         <div className="container text-start p-4 shadow">
+            <Row>
+            
+            <Col xs={6}>
             <Form onSubmit={formik.handleSubmit} className="user-form">
 
                 <Row >
@@ -89,16 +97,6 @@ const ResumeForm = () => {
                 </Row>
 
                 <Row>
-                    <Col xs={12}>
-                        <Form.Group className="mb-2" controlId="address">
-                            <Form.Label column="sm">Address</Form.Label>
-                            <Form.Control size="sm" as="textarea" placeholder="Address" rows={4} onChange={formik.handleChange}
-                                value={formik.values.address || ''} />
-                        </Form.Group>
-                    </Col>
-                </Row>
-                
-                <Row>
                     <Col xs={6}>
                         <Form.Group className="mb-2" controlId="phone_number">
                             <Form.Label column="sm">Phone Number</Form.Label>
@@ -116,48 +114,38 @@ const ResumeForm = () => {
                 </Row>
 
                 <Row>
-                    <div className="d-flex justify-content-between align-items-center">
-                        <p className='section_title'>Education</p>
-                        <Button onClick={() => addMoreEduValues()}  className="h-50 btn btn-primary btn-sm">Add more</ Button>
-                    </div>
-
-                    {
-                    educationValues.map((element, index) => (
-                        <div>
-                            <Row>
-                            <Col xs={3}>
-                                <Form.Group className="mb-2" controlId="university_name">
-                                    <Form.Label column="sm">University Name</Form.Label>
-                                    <Form.Control size='sm' type="text" value={element.university_name || ''} placeholder="University Name" name="university_name" onChange={e => handleChangeEducation(index, e)} />
-                                </Form.Group>
-                            </Col>
-
-                            <Col xs={3}>
-                                <Form.Group className="mb-2" controlId="course">
-                                    <Form.Label column="sm">Course</Form.Label>
-                                    <Form.Control size='sm' type="text" placeholder="Course" value={element.course || ''} name="course" onChange={e => handleChangeEducation(index, e)} />
-                                </Form.Group>
-                            </Col>
-
-                            <Col xs={3}>
-                                <Form.Group className="mb-2" controlId="passing_year">
-                                    <Form.Label column="sm">Passing Year</Form.Label>
-                                    <Form.Control size='sm' type="text" placeholder="Passing Year"  value={element.passing_year || ''} name="passing_year" onChange={e => handleChangeEducation(index, e)} />
-                                </Form.Group>
-                            </Col>
-
-                            <Col xs={3}>
-                                <Form.Group className="mb-2" controlId="percentages">
-                                    <Form.Label column="sm">Percentages</Form.Label>
-                                    <Form.Control size='sm' type="text" placeholder="Percentages" name="percentages" value={element.percentages || ''} onChange={e => handleChangeEducation(index, e)} />
-                                </Form.Group>
-                            </Col>
-                            </Row>
-                        </div>
-                    ))
-                    }
+                    <Col xs={6}>
+                        <Form.Group className="mb-2" controlId="role">
+                            <Form.Label column="sm">Role</Form.Label>
+                            <Form.Control size="sm" type="text" placeholder="Role" onChange={formik.handleChange}
+                                value={formik.values.role || ''} />
+                        </Form.Group>
+                    </Col>
+                    <Col xs={6}>
+                        <Form.Group className="mb-2" controlId="website">
+                            <Form.Label column="sm">Personal Website</Form.Label>
+                            <Form.Control size="sm" type="email" placeholder="Personal Website" onChange={formik.handleChange}
+                                value={formik.values.website || ''} />
+                        </Form.Group>
+                    </Col>
                 </Row>
 
+                <Row>
+                    <Col xs={6}>
+                        <Form.Group className="mb-2" controlId="address">
+                            <Form.Label column="sm">Address</Form.Label>
+                            <Form.Control size="sm" as="textarea" placeholder="Address" rows={3} onChange={formik.handleChange}
+                                value={formik.values.address || ''} />
+                        </Form.Group>
+                    </Col>
+                    <Col xs={6}>
+                        <Form.Group className="mb-2" controlId="summary">
+                            <Form.Label column="sm">Summary</Form.Label>
+                            <Form.Control size="sm" as="textarea" placeholder="Summary" rows={3} onChange={formik.handleChange}
+                                value={formik.values.summary || ''} />
+                        </Form.Group>
+                    </Col>
+                </Row>
                 
                 <Row>
                     <div className="d-flex justify-content-between align-items-center">
@@ -201,12 +189,66 @@ const ResumeForm = () => {
                     }
                 </Row>
 
+
+                <Row>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <p className='section_title'>Education</p>
+                        <Button onClick={() => addMoreEduValues()}  className="h-50 btn btn-primary btn-sm">Add more</ Button>
+                    </div>
+
+                    {
+                    educationValues.map((element, index) => (
+                        <div>
+                            <Row>
+                            <Col xs={3}>
+                                <Form.Group className="mb-2" controlId="university_name">
+                                    <Form.Label column="sm">University Name</Form.Label>
+                                    <Form.Control size='sm' type="text" value={element.university_name || ''} placeholder="University Name" name="university_name" onChange={e => handleChangeEducation(index, e)} />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={3}>
+                                <Form.Group className="mb-2" controlId="course">
+                                    <Form.Label column="sm">Course</Form.Label>
+                                    <Form.Control size='sm' type="text" placeholder="Course" value={element.course || ''} name="course" onChange={e => handleChangeEducation(index, e)} />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={3}>
+                                <Form.Group className="mb-2" controlId="passing_year">
+                                    <Form.Label column="sm">Passing Year</Form.Label>
+                                    <Form.Control size='sm' type="text" placeholder="Passing Year"  value={element.passing_year || ''} name="passing_year" onChange={e => handleChangeEducation(index, e)} />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={3}>
+                                <Form.Group className="mb-2" controlId="percentages">
+                                    <Form.Label column="sm">Percentages</Form.Label>
+                                    <Form.Control size='sm' type="text" placeholder="Percentages" name="percentages" value={element.percentages || ''} onChange={e => handleChangeEducation(index, e)} />
+                                </Form.Group>
+                            </Col>
+                            </Row>
+                        </div>
+                    ))
+                    }
+                </Row>
+                
+                <Row className="mt-3">
+                    <Col xs={12}>
+                        <Form.Group className="mb-2" controlId="skills">
+                            <Form.Label column="sm">Skills</Form.Label>
+                            <Form.Control size="sm" type="text" placeholder="skills" onChange={formik.handleChange}
+                                value={formik.values.skills} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
                 <Row>
                     <Col xs={12}>
                         <Form.Group className="mb-2" controlId="achievement">
                             <Form.Label column="sm">Achievement</Form.Label>
                             <Form.Control size="sm" as="textarea" placeholder="Achievement" rows={4} onChange={formik.handleChange}
-                                value={formik.values.achievement || ''} />
+                                value={formik.values.achievement} />
                         </Form.Group>
                     </Col>
                 </Row>
@@ -216,8 +258,15 @@ const ResumeForm = () => {
                         <Button type="submit">Submit</Button>
                     </Col>
                 </Row>
+                
+            </Form> 
+            </Col>
 
-            </Form>          
+            <Col xs={6}>
+                <DisplayResume  data={formik.values} experience_data={experienceValues} education_data={educationValues} />
+            </Col>
+            
+            </Row>
         </div>
 
         </>

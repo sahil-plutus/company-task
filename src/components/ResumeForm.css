@@ -1,5 +1,42 @@
+:root{
+    --blue: #4f8fd3;
+    --gray: #f0f0f0;
+}
+
 .section_title{
     font-size: 1.6rem;
     margin: 0;
     padding: 0.5rem 0;
+}
+
+.resume_display{
+    margin: 1rem;
+    border-left: 1rem solid var(--blue);
+    text-align: start;
+}
+
+.resume_display .personal_details{
+    background: var(--gray);
+    padding: 1rem;
+}
+
+
+.resume_display .experience_section .section_details{
+    border-left: 0.3rem solid var(--blue);
+    padding-left: 2rem;
+}
+
+.resume_display .education_section .section_details{
+    border-left: 0.3rem solid var(--blue);
+    padding-left: 2rem;
+}
+
+.resume_display .skill_section .section_details{
+    border-left: 0.3rem solid var(--blue);
+    padding-left: 1.5rem;
+}
+
+.resume_display .achievement_section .section_details{
+    border-left: 0.3rem solid var(--blue);
+    padding-left: 1.5rem;
 }
