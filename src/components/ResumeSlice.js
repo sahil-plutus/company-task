@@ -3,10 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const ResumeSlice = createSlice({
     name: 'resume',
-    initialState:[],
+    initialState:{},
     reducers: {
         submitForm: (state, action) => {
-            state.push(action.payload);
+            console.log(action.payload, 'action payload')
+            state.resume = {...state.resume, resume: action.payload}
         }
     }
 })
